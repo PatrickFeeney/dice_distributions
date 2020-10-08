@@ -15,3 +15,10 @@ def test_encoder_unexpected():
     """
     with pytest.raises(ValueError):
         d6.encoder.transform(np.asarray([[7]]))
+
+
+def test_map_prob():
+    """Test map_prob with one observation of each category
+    """
+    assert np.all(d6.map_alpha(d6.encoder.transform(d6.obs_cat), d6.prior_alpha)
+                  == d6.prior_dist.mean())

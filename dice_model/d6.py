@@ -14,7 +14,7 @@ prior_alpha = np.asarray([20.0] * 6)
 prior_dist = stats.dirichlet(prior_alpha)
 
 
-def map_alpha(observations, prior_alpha):
+def map_prob(observations, prior_alpha):
     """MAP estimate of K-dimensional Dirichlet alpha
 
     Args:
@@ -22,7 +22,7 @@ def map_alpha(observations, prior_alpha):
         prior_alpha (numpy.ndarray): Alpha for Dirichlet prior (K,)
 
     Returns:
-        numpy.ndarray: MAP estimate of Dirichlet alpha (K,)
+        numpy.ndarray: MAP estimate of the dice probabilities (K,)
     """
     # number of observations
     n = observations.shape[0]
