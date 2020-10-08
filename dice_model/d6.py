@@ -15,7 +15,7 @@ prior_dist = stats.dirichlet(prior_alpha)
 
 
 def map_prob(observations, prior_alpha):
-    """MAP estimate of K-dimensional Dirichlet alpha
+    """MAP estimate of the dice probabilities (K,)
 
     Args:
         observations (numpy.ndarray): One-hot encoding of observations (N, K)
