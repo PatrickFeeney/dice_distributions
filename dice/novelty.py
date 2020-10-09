@@ -12,6 +12,7 @@ class DiceNoveltyDetector:
             model (DirichletCat): Model used for probability calculations
             obs_cat (numpy.ndarray): Example of all observation category labels (K, 1)
         """
+        self.model = model
         # encoder to transform (N, 1) observations to one hot (N, K)
         self.encoder = OneHotEncoder(sparse=False, dtype=np.int)
         self.encoder.fit(obs_cat)
