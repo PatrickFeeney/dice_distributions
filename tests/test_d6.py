@@ -4,6 +4,7 @@ import pytest
 import dice.d6 as d6
 
 
+# encoder tests
 def test_encoder_expected():
     """Test encoder with all expected inputs
     """
@@ -17,8 +18,19 @@ def test_encoder_unexpected():
         d6.nov_detect.one_hot_obs(np.asarray([[7]]))
 
 
+# modeling tests
 def test_map_prob():
     """Test map_prob with one observation of each category
     """
-    assert np.all(np.isclose(d6.model.map(d6.nov_detect.count_obs(d6.obs_cat)),
-                             d6.prior_dist.mean()[np.newaxis]))
+    assert np.all(np.isclose(d6.fair_model.map(d6.nov_detect.count_obs(d6.obs_cat)),
+                             [[.166666666] * 6]))
+
+
+def test_likelihood():
+    assert np.isclose(d6.fair_model.likelihood(d6.nov_detect.count_obs(d6.obs_cat)),
+                      1.8950327390001377e-05)
+
+
+def test_log_likelihood():
+    assert np.isclose(d6.fair_model.log_likelihood(d6.nov_detect.count_obs(d6.obs_cat)),
+                      -10.873689350067835)

@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.special import gamma
+from scipy.special import gamma, gammaln
 
 
 class DirichletCat:
@@ -28,6 +28,23 @@ class DirichletCat:
         # likelihood term for each category
         cat_likelihood = gamma(obs_count + self.ALPHA) / gamma(self.ALPHA)
         return reg * np.prod(cat_likelihood)
+
+    def log_likelihood(self, obs_count):
+        """Log-likelihood of data given prior
+
+        Args:
+            obs_count (numpy.ndarray): Count of observations (1, K)
+
+        Returns:
+            float: Log-likelihood of data given prior
+        """
+        # number of observations
+        n = np.sum(obs_count)
+        # regularization term of log-likelihood
+        reg = gammaln(self.ALPHA_SUM) - gammaln(n + self.ALPHA_SUM)
+        # log-likelihood term for each category
+        cat_log_likelihood = gammaln(obs_count + self.ALPHA) - gammaln(self.ALPHA)
+        return reg + np.sum(cat_log_likelihood)
 
     def map(self, obs_count):
         """MAP estimate of the K-way categorical distribution

@@ -5,30 +5,35 @@ from sklearn.preprocessing import OneHotEncoder
 class DiceNoveltyDetector:
     """Interface for determining whether die distribution is novel
     """
-    def __init__(self, model, obs_cat):
+    def __init__(self, fair_model, cheat_model, obs_cat):
         """Initialize detector.
 
         Args:
-            model (DirichletCat): Model used for probability calculations
+            fair_model (DirichletCat): Model used for a fair die
+            cheat_model (DirichletCat): Model used for an unfair die
             obs_cat (numpy.ndarray): Example of all observation category labels (K, 1)
         """
-        self.model = model
+        self.fair_model = fair_model
+        self.cheat_model = cheat_model
         # encoder to transform (N, 1) observations to one hot (N, K)
         self.encoder = OneHotEncoder(sparse=False, dtype=np.int)
         self.encoder.fit(obs_cat)
 
-    def is_novelty(self, obs, thresh=.1):
+    def is_novelty(self, obs, thresh=10):
         """Determine if die distribution is novel from observations
 
         Args:
             obs (numpy.ndarray): Observation labels (N, 1)
-            thresh (float, optional): Threshold for lowest likelihood not considered novelty.
-                                      Defaults to .1.
+            thresh (float, optional): Threshold for lowest Bayes factor considered novelty.
+                                      Defaults to 10.
 
         Returns:
             bool: Whether die distribution is novel from observations
         """
-        return self.model.likelihood(self.count_obs(obs)) < thresh
+        obs_count = self.count_obs(obs)
+        log_bayes_factor = self.cheat_model.log_likelihood(obs_count) - \
+            self.fair_model.log_likelihood(obs_count)
+        return log_bayes_factor > np.log(thresh)
 
     def count_obs(self, obs):
         """Count observation labels
