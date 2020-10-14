@@ -53,8 +53,8 @@ class DiceNoveltyDetector:
             float: Log Bayes factor of cheat model versus fair model
         """
         obs_count = self.count_obs(obs)
-        log_bayes_factor = self.cheat_model.log_likelihood(obs_count) - \
-            self.fair_model.log_likelihood(obs_count)
+        log_bayes_factor = self.cheat_model.log_marginal(obs_count) - \
+            self.fair_model.log_marginal(obs_count)
         return log_bayes_factor
 
     def one_hot_obs(self, obs):

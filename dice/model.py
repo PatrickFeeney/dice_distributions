@@ -12,39 +12,39 @@ class DirichletCat:
         self.ALPHA = alpha
         self.ALPHA_SUM = np.sum(alpha)
 
-    def likelihood(self, obs_count):
-        """Likelihood of data given prior
+    def marginal(self, obs_count):
+        """Marginal likelihood of data given prior
 
         Args:
             obs_count (numpy.ndarray): Count of observations (1, K)
 
         Returns:
-            float: Likelihood of data given prior
+            float: Marginal likelihood of data given prior
         """
         # number of observations
         n = np.sum(obs_count)
-        # regularization term of likelihood
+        # regularization term of marginal
         reg = gamma(self.ALPHA_SUM) / gamma(n + self.ALPHA_SUM)
-        # likelihood term for each category
-        cat_likelihood = gamma(obs_count + self.ALPHA) / gamma(self.ALPHA)
-        return reg * np.prod(cat_likelihood)
+        # marginal term for each category
+        cat_marginal = gamma(obs_count + self.ALPHA) / gamma(self.ALPHA)
+        return reg * np.prod(cat_marginal)
 
-    def log_likelihood(self, obs_count):
-        """Log-likelihood of data given prior
+    def log_marginal(self, obs_count):
+        """Log-marginal likelihood of data given prior
 
         Args:
             obs_count (numpy.ndarray): Count of observations (1, K)
 
         Returns:
-            float: Log-likelihood of data given prior
+            float: Log-marginal likelihood of data given prior
         """
         # number of observations
         n = np.sum(obs_count)
-        # regularization term of log-likelihood
+        # regularization term of log-marginal
         reg = gammaln(self.ALPHA_SUM) - gammaln(n + self.ALPHA_SUM)
-        # log-likelihood term for each category
-        cat_log_likelihood = gammaln(obs_count + self.ALPHA) - gammaln(self.ALPHA)
-        return reg + np.sum(cat_log_likelihood)
+        # log-marginal term for each category
+        cat_log_marginal = gammaln(obs_count + self.ALPHA) - gammaln(self.ALPHA)
+        return reg + np.sum(cat_log_marginal)
 
     def map(self, obs_count):
         """MAP estimate of the K-way categorical distribution

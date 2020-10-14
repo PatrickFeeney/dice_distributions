@@ -26,11 +26,11 @@ def test_map_prob():
                              [[.166666666] * 6]))
 
 
-def test_likelihood():
-    assert np.isclose(d6.fair_model.likelihood(d6.nov_detect.count_obs(d6.obs_cat)),
+def test_marginal():
+    assert np.isclose(d6.fair_model.marginal(d6.nov_detect.count_obs(d6.obs_cat)),
                       1.8950327390001377e-05)
 
 
-def test_log_likelihood():
-    assert np.isclose(d6.fair_model.log_likelihood(d6.nov_detect.count_obs(d6.obs_cat)),
+def test_log_marginal():
+    assert np.isclose(d6.fair_model.log_marginal(d6.nov_detect.count_obs(d6.obs_cat)),
                       -10.873689350067835)
