@@ -4,7 +4,7 @@ from dice.model import DirichletCat
 from dice.novelty import DiceNoveltyDetector
 
 # example of each possible die observation category (6, 1)
-obs_cat = np.asarray([[i for i in range(1, 7)]]).T
+obs_cat = np.asarray([[i] for i in range(1, 7)])
 # priors
 alpha_fair = np.asarray([[20.0] * 6])
 alpha_cheat = np.asarray([[1.0] * 6])
