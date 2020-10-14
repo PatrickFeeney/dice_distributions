@@ -19,6 +19,17 @@ class DiceNoveltyDetector:
         self.encoder = OneHotEncoder(sparse=False, dtype=np.int)
         self.encoder.fit(obs_cat)
 
+    def count_obs(self, obs):
+        """Count observation labels
+
+        Args:
+            obs (numpy.ndarray): Observation labels (N, 1)
+
+        Returns:
+            numpy.ndarray: Count of observation labels (1, K)
+        """
+        return np.sum(self.one_hot_obs(obs), axis=0, keepdims=True)
+
     def is_novelty(self, obs, thresh=10):
         """Determine if die distribution is novel from observations
 
@@ -30,21 +41,21 @@ class DiceNoveltyDetector:
         Returns:
             bool: Whether die distribution is novel from observations
         """
-        obs_count = self.count_obs(obs)
-        log_bayes_factor = self.cheat_model.log_likelihood(obs_count) - \
-            self.fair_model.log_likelihood(obs_count)
-        return log_bayes_factor > np.log(thresh)
+        return self.log_bayes_factor(obs) > np.log(thresh)
 
-    def count_obs(self, obs):
-        """Count observation labels
+    def log_bayes_factor(self, obs):
+        """Log Bayes factor with favoring cheat model as positive Bayes factors
 
         Args:
             obs (numpy.ndarray): Observation labels (N, 1)
 
         Returns:
-            numpy.ndarray: Count of observation labels (1, K)
+            float: Log Bayes factor of cheat model versus fair model
         """
-        return np.sum(self.one_hot_obs(obs), axis=0, keepdims=True)
+        obs_count = self.count_obs(obs)
+        log_bayes_factor = self.cheat_model.log_likelihood(obs_count) - \
+            self.fair_model.log_likelihood(obs_count)
+        return log_bayes_factor
 
     def one_hot_obs(self, obs):
         """Transform observation labels into one-hot encoding
