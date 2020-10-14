@@ -15,9 +15,10 @@ class DiceNoveltyDetector:
         """
         self.fair_model = fair_model
         self.cheat_model = cheat_model
+        self.obs_cat = obs_cat
         # encoder to transform (N, 1) observations to one hot (N, K)
         self.encoder = OneHotEncoder(sparse=False, dtype=np.int)
-        self.encoder.fit(obs_cat)
+        self.encoder.fit(self.obs_cat)
 
     def count_obs(self, obs):
         """Count observation labels
@@ -56,6 +57,17 @@ class DiceNoveltyDetector:
         log_bayes_factor = self.cheat_model.log_marginal(obs_count) - \
             self.fair_model.log_marginal(obs_count)
         return log_bayes_factor
+
+    def map_distribution(self, obs):
+        """MAP estimate of the die distribution with fair prior
+
+        Args:
+            obs (numpy.ndarray): Observation labels (N, 1)
+
+        Returns:
+            tuple: (observation categories (K, 1), MAP estimate (K, 1))
+        """
+        return (self.obs_cat, self.fair_model.map(self.count_obs(obs)))
 
     def one_hot_obs(self, obs):
         """Transform observation labels into one-hot encoding

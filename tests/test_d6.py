@@ -24,6 +24,9 @@ def test_map_prob():
     """
     assert np.all(np.isclose(d6.fair_model.map(d6.nov_detect.count_obs(d6.obs_cat)),
                              [[.166666666] * 6]))
+    obs_cat, map_dist = d6.nov_detect.map_distribution(d6.obs_cat)
+    assert np.all(obs_cat == d6.obs_cat)
+    assert np.all(np.isclose(map_dist, [[.166666666] * 6]))
 
 
 def test_marginal():
@@ -34,3 +37,7 @@ def test_marginal():
 def test_log_marginal():
     assert np.isclose(d6.fair_model.log_marginal(d6.nov_detect.count_obs(d6.obs_cat)),
                       -10.873689350067835)
+
+
+def test_log_bayes_factor():
+    assert np.isclose(d6.nov_detect.log_bayes_factor(d6.obs_cat), -1.8411267530240067)
