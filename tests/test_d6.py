@@ -18,6 +18,23 @@ def test_encoder_unexpected():
         d6.nov_detect.one_hot_obs(np.asarray([[7]]))
 
 
+def test_is_valid_obs():
+    assert not d6.nov_detect.is_valid_obs(np.asarray([[7]]))
+
+
+def test_update_model():
+    new_nov = d6.nov_detect.update_model(np.asarray([[7]]))
+    assert np.all(new_nov.obs_cat == np.append(d6.nov_detect.obs_cat, [[7]], axis=0))
+    assert np.all(new_nov.fair_model.ALPHA ==
+                  np.append(d6.nov_detect.fair_model.ALPHA,
+                            [[d6.nov_detect.NEW_ALPHA_FAIR]],
+                            axis=1))
+    assert np.all(new_nov.cheat_model.ALPHA ==
+                  np.append(d6.nov_detect.cheat_model.ALPHA,
+                            [[d6.nov_detect.NEW_ALPHA_CHEAT]],
+                            axis=1))
+
+
 # modeling tests
 def test_map_prob():
     """Test map_prob with one observation of each category
